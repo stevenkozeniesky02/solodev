@@ -40,7 +40,7 @@ export function buildClaudeArgs(options: ClaudeRunOptions): string[] {
 
 export async function checkAuth(): Promise<AuthStatus> {
   try {
-    const output = execSync('claude auth status --output-format json', {
+    const output = execSync('claude auth status --json', {
       encoding: 'utf-8',
       timeout: 10000,
       env: { ...process.env, CLAUDECODE: '' },
