@@ -15,7 +15,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "tsc && chmod +x dist/cli.js",
+    "build": "npm run bundle-plugins && tsc && chmod +x dist/cli.js",
+    "bundle-plugins": "node --loader ts-node/esm scripts/bundle-plugins.ts",
     "dev": "tsc --watch",
     "start": "node dist/cli.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
@@ -42,6 +43,7 @@
     "@types/uuid": "^10.0.0",
     "jest": "^29.7.0",
     "@jest/globals": "^29.7.0",
-    "ts-jest": "^29.2.0"
+    "ts-jest": "^29.2.0",
+    "ts-node": "^10.9.0"
   }
 }
