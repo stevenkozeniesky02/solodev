@@ -1,6 +1,6 @@
 {
   "name": "solodev",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Interactive CLI for the Solo Dev Toolbox — 18 plugins, one pipeline, persistent context",
   "type": "module",
   "bin": {
@@ -22,7 +22,14 @@
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["claude", "cli", "tui", "solo-developer", "ai", "toolbox"],
+  "keywords": [
+    "claude",
+    "cli",
+    "tui",
+    "solo-developer",
+    "ai",
+    "toolbox"
+  ],
   "author": "Steven Kozeniesky",
   "license": "MIT",
   "repository": {
