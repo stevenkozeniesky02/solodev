@@ -1,6 +1,6 @@
 {
   "name": "solodevproject",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Interactive CLI for the Solo Dev Toolbox — 18 plugins, one pipeline, persistent context",
   "type": "module",
   "bin": {

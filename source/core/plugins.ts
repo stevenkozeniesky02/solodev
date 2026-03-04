@@ -23,6 +23,17 @@ export function getPluginDir(): string {
   throw new Error('No plugins found. Run solodev update-plugins or set pluginDir in config.');
 }
 
+/** Return paths to each individual plugin subdirectory. */
+export function getPluginDirs(): string[] {
+  const parentDir = getPluginDir();
+  return fs.readdirSync(parentDir)
+    .filter(f =>
+      fs.statSync(path.join(parentDir, f)).isDirectory() &&
+      fs.existsSync(path.join(parentDir, f, '.claude-plugin', 'plugin.json'))
+    )
+    .map(f => path.join(parentDir, f));
+}
+
 export function listAvailablePlugins(): string[] {
   const dir = getPluginDir();
   return fs.readdirSync(dir).filter(f =>

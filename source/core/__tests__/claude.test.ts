@@ -8,7 +8,7 @@ describe('claude', () => {
       prompt: '/spark "AI tool"',
       sessionId: '550e8400-e29b-41d4-a716-446655440000',
       isNewSession: true,
-      pluginDir: '/path/to/plugins',
+      pluginDirs: ['/path/to/plugins/idea-spark', '/path/to/plugins/stack-pick'],
       permissionMode: 'acceptEdits',
     });
     expect(args).toContain('-p');
@@ -16,7 +16,8 @@ describe('claude', () => {
     expect(args).toContain('--session-id');
     expect(args).toContain('550e8400-e29b-41d4-a716-446655440000');
     expect(args).toContain('--plugin-dir');
-    expect(args).toContain('/path/to/plugins');
+    expect(args).toContain('/path/to/plugins/idea-spark');
+    expect(args).toContain('/path/to/plugins/stack-pick');
     expect(args).toContain('--output-format');
     expect(args).toContain('stream-json');
     expect(args).toContain('--verbose');
@@ -31,7 +32,7 @@ describe('claude', () => {
       prompt: '/stack',
       sessionId: '550e8400-e29b-41d4-a716-446655440000',
       isNewSession: false,
-      pluginDir: '/path/to/plugins',
+      pluginDirs: ['/path/to/plugins/idea-spark', '/path/to/plugins/stack-pick'],
       permissionMode: 'default',
     });
     expect(args).toContain('--resume');

@@ -1,6 +1,6 @@
 // source/commands/run.ts
 import { getProjectByPath, addProject, touchProject, markSessionStarted } from '../core/projects.js';
-import { getPluginDir } from '../core/plugins.js';
+import { getPluginDirs } from '../core/plugins.js';
 import { runClaude } from '../core/claude.js';
 
 export async function runDirect(command: string, args: string[], projectPath: string): Promise<void> {
@@ -11,13 +11,13 @@ export async function runDirect(command: string, args: string[], projectPath: st
   }
 
   const prompt = `/${command} ${args.join(' ')}`.trim();
-  const pluginDir = getPluginDir();
+  const pluginDirs = getPluginDirs();
 
   const { events, kill } = runClaude({
     prompt,
     sessionId: project.sessionId,
     isNewSession: !project.sessionStarted,
-    pluginDir,
+    pluginDirs,
     permissionMode: project.permissionMode,
   });
 

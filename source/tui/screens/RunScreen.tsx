@@ -4,7 +4,7 @@ import { Box, Text, useInput } from 'ink';
 import Spinner from 'ink-spinner';
 import { runClaude, type ClaudeRunOptions } from '../../core/claude.js';
 import { getProject, touchProject, markSessionStarted } from '../../core/projects.js';
-import { getPluginDir } from '../../core/plugins.js';
+import { getPluginDirs } from '../../core/plugins.js';
 import { LiveStream } from '../components/LiveStream.js';
 import type { PipelineStep } from '../../core/pipeline.js';
 
@@ -33,14 +33,14 @@ export const RunScreen = ({ projectId, step, onComplete, onCancel }: Props) => {
       return;
     }
 
-    const pluginDir = getPluginDir();
+    const pluginDirs = getPluginDirs();
     const isNew = !project.sessionStarted;
 
     const options: ClaudeRunOptions = {
       prompt: step.command,
       sessionId: project.sessionId,
       isNewSession: isNew,
-      pluginDir,
+      pluginDirs,
       permissionMode: project.permissionMode,
     };
 

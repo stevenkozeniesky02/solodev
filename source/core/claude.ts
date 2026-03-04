@@ -6,7 +6,7 @@ export interface ClaudeRunOptions {
   prompt: string;
   sessionId: string;
   isNewSession: boolean;
-  pluginDir: string;
+  pluginDirs: string[];
   permissionMode: 'default' | 'acceptEdits' | 'bypassPermissions';
 }
 
@@ -42,7 +42,9 @@ export function buildClaudeArgs(options: ClaudeRunOptions): string[] {
     args.push('--resume', options.sessionId);
   }
 
-  args.push('--plugin-dir', options.pluginDir);
+  for (const dir of options.pluginDirs) {
+    args.push('--plugin-dir', dir);
+  }
   args.push('--output-format', 'stream-json');
   args.push('--verbose');
   args.push('--permission-mode', options.permissionMode);
