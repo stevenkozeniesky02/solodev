@@ -25,6 +25,11 @@
   "keywords": ["claude", "cli", "tui", "solo-developer", "ai", "toolbox"],
   "author": "Steven Kozeniesky",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stevenkozeniesky02/solodev.git"
+  },
+  "homepage": "https://github.com/stevenkozeniesky02/solodev",
   "dependencies": {
     "ink": "^6.8.0",
     "react": "^19.0.0",
