@@ -28,7 +28,7 @@ describe('pipeline', () => {
     fs.mkdirSync(sparkDir);
     fs.writeFileSync(path.join(sparkDir, 'state.json'), JSON.stringify({ status: 'complete' }));
     const steps = scanPipeline(tmpDir);
-    const spark = steps.find(s => s.command === '/spark');
+    const spark = steps.find(s => s.pluginName === 'idea-spark');
     expect(spark!.status).toBe('complete');
   });
 
@@ -38,7 +38,7 @@ describe('pipeline', () => {
     fs.mkdirSync(buildDir);
     fs.writeFileSync(path.join(buildDir, 'state.json'), JSON.stringify({ status: 'in_progress' }));
     const steps = scanPipeline(tmpDir);
-    const build = steps.find(s => s.command === '/build');
+    const build = steps.find(s => s.pluginName === 'build-engine');
     expect(build!.status).toBe('in_progress');
   });
 
@@ -48,7 +48,7 @@ describe('pipeline', () => {
     fs.mkdirSync(sparkDir);
     // No state.json — directory exists, assume complete
     const steps = scanPipeline(tmpDir);
-    const spark = steps.find(s => s.command === '/spark');
+    const spark = steps.find(s => s.pluginName === 'idea-spark');
     expect(spark!.status).toBe('complete');
   });
 
@@ -57,7 +57,7 @@ describe('pipeline', () => {
     const steps = scanPipeline(tmpDir);
     const next = suggestNext(steps);
     expect(next).toBeTruthy();
-    expect(next!.command).toBe('/spark'); // first step when nothing done
+    expect(next!.pluginName).toBe('idea-spark'); // first step when nothing done
   });
 
   it('should count completed steps', async () => {
