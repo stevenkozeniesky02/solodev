@@ -107,6 +107,7 @@ export function runClaude(options: ClaudeRunOptions): {
   const child = spawn('claude', args, {
     env: cleanEnv(),
     shell: false,
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
 
   let buffer = '';
