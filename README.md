@@ -55,7 +55,7 @@ solodev solves both problems:
 ## Install
 
 ```bash
-npm install -g solodev
+npm install -g solodevproject
 ```
 
 **Prerequisites:**
