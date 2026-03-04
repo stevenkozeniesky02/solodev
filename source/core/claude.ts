@@ -17,9 +17,20 @@ export interface AuthStatus {
 }
 
 export interface ClaudeStreamEvent {
-  type: 'text' | 'tool_use' | 'result' | 'error' | 'system';
-  content: string;
-  raw?: unknown;
+  type: string;
+  subtype?: string;
+  message?: {
+    content?: Array<{ type: string; text?: string }>;
+  };
+  content?: string;
+  result?: string;
+}
+
+/** Build a clean env with CLAUDECODE removed (not just empty). */
+function cleanEnv(): NodeJS.ProcessEnv {
+  const env = { ...process.env };
+  delete env.CLAUDECODE;
+  return env;
 }
 
 export function buildClaudeArgs(options: ClaudeRunOptions): string[] {
@@ -33,6 +44,7 @@ export function buildClaudeArgs(options: ClaudeRunOptions): string[] {
 
   args.push('--plugin-dir', options.pluginDir);
   args.push('--output-format', 'stream-json');
+  args.push('--verbose');
   args.push('--permission-mode', options.permissionMode);
 
   return args;
@@ -43,7 +55,7 @@ export async function checkAuth(): Promise<AuthStatus> {
     const output = execSync('claude auth status --json', {
       encoding: 'utf-8',
       timeout: 10000,
-      env: { ...process.env, CLAUDECODE: '' },
+      env: cleanEnv(),
     });
     const parsed = JSON.parse(output.trim());
     return {
@@ -56,6 +68,24 @@ export async function checkAuth(): Promise<AuthStatus> {
   }
 }
 
+/** Extract displayable text from a stream-json event. */
+function extractContent(event: ClaudeStreamEvent): string | null {
+  // Assistant messages: { type: "assistant", message: { content: [{ type: "text", text: "..." }] } }
+  if (event.type === 'assistant' && event.message?.content) {
+    const texts = event.message.content
+      .filter(c => c.type === 'text' && c.text)
+      .map(c => c.text!);
+    return texts.length > 0 ? texts.join('') : null;
+  }
+
+  // Result messages: { type: "result", result: "..." }
+  if (event.type === 'result' && event.result) {
+    return event.result;
+  }
+
+  return null;
+}
+
 export function runClaude(options: ClaudeRunOptions): {
   events: EventEmitter;
   kill: () => void;
@@ -64,7 +94,7 @@ export function runClaude(options: ClaudeRunOptions): {
   const emitter = new EventEmitter();
 
   const child = spawn('claude', args, {
-    env: { ...process.env, CLAUDECODE: '' },
+    env: cleanEnv(),
     shell: false,
   });
 
@@ -79,8 +109,14 @@ export function runClaude(options: ClaudeRunOptions): {
     for (const line of lines) {
       if (!line.trim()) continue;
       try {
-        const parsed = JSON.parse(line);
-        emitter.emit('message', parsed);
+        const parsed = JSON.parse(line) as ClaudeStreamEvent;
+        const content = extractContent(parsed);
+        emitter.emit('message', {
+          type: parsed.type,
+          subtype: parsed.subtype,
+          content,
+          raw: parsed,
+        });
       } catch {
         emitter.emit('message', { type: 'text', content: line });
       }

@@ -19,6 +19,7 @@ describe('claude', () => {
     expect(args).toContain('/path/to/plugins');
     expect(args).toContain('--output-format');
     expect(args).toContain('stream-json');
+    expect(args).toContain('--verbose');
     expect(args).toContain('--permission-mode');
     expect(args).toContain('acceptEdits');
     expect(args).not.toContain('--resume');
