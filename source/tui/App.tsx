@@ -4,6 +4,7 @@ import { Box, Text, useApp, useInput } from 'ink';
 import { AuthScreen } from './screens/AuthScreen.js';
 import { ProjectScreen } from './screens/ProjectScreen.js';
 import { DashboardScreen } from './screens/DashboardScreen.js';
+import { RunScreen } from './screens/RunScreen.js';
 import type { PipelineStep } from '../core/pipeline.js';
 
 export type Screen = 'auth' | 'projects' | 'dashboard' | 'run';
@@ -55,8 +56,19 @@ export const App = () => {
           onBack={() => setScreen('projects')}
         />
       )}
-      {screen === 'run' && (
-        <Text>Run screen — coming in Task 11</Text>
+      {screen === 'run' && appState.projectId && runStep && (
+        <RunScreen
+          projectId={appState.projectId}
+          step={runStep}
+          onComplete={() => {
+            setRunStep(null);
+            setScreen('dashboard');
+          }}
+          onCancel={() => {
+            setRunStep(null);
+            setScreen('dashboard');
+          }}
+        />
       )}
     </Box>
   );
