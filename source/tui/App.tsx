@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Box, Text, useApp, useInput } from 'ink';
 import { AuthScreen } from './screens/AuthScreen.js';
 import { ProjectScreen } from './screens/ProjectScreen.js';
+import { DashboardScreen } from './screens/DashboardScreen.js';
+import type { PipelineStep } from '../core/pipeline.js';
 
 export type Screen = 'auth' | 'projects' | 'dashboard' | 'run';
 
@@ -18,6 +20,7 @@ export const App = () => {
     projectId: null,
     projectPath: null,
   });
+  const [runStep, setRunStep] = useState<PipelineStep | null>(null);
 
   // Global quit handler
   useInput((input, key) => {
@@ -41,8 +44,16 @@ export const App = () => {
           setScreen('dashboard');
         }} />
       )}
-      {screen === 'dashboard' && (
-        <Text>Dashboard screen — coming in Task 10</Text>
+      {screen === 'dashboard' && appState.projectId && appState.projectPath && (
+        <DashboardScreen
+          projectId={appState.projectId}
+          projectPath={appState.projectPath}
+          onRun={(step) => {
+            setRunStep(step);
+            setScreen('run');
+          }}
+          onBack={() => setScreen('projects')}
+        />
       )}
       {screen === 'run' && (
         <Text>Run screen — coming in Task 11</Text>
