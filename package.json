@@ -1,0 +1,47 @@
+{
+  "name": "solodev",
+  "version": "0.1.0",
+  "description": "Interactive CLI for the Solo Dev Toolbox — 18 plugins, one pipeline, persistent context",
+  "type": "module",
+  "bin": {
+    "solodev": "./dist/cli.js"
+  },
+  "main": "./dist/cli.js",
+  "files": [
+    "dist",
+    "plugins"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x dist/cli.js",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["claude", "cli", "tui", "solo-developer", "ai", "toolbox"],
+  "author": "Steven Kozeniesky",
+  "license": "MIT",
+  "dependencies": {
+    "ink": "^6.8.0",
+    "react": "^19.0.0",
+    "ink-select-input": "^6.2.0",
+    "ink-text-input": "^6.0.0",
+    "ink-spinner": "^5.0.0",
+    "fullscreen-ink": "^0.1.0",
+    "commander": "^13.0.0",
+    "xdg-basedir": "^5.1.0",
+    "uuid": "^11.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/react": "^19.0.0",
+    "@types/node": "^22.0.0",
+    "@types/uuid": "^10.0.0",
+    "jest": "^29.7.0",
+    "@jest/globals": "^29.7.0",
+    "ts-jest": "^29.2.0"
+  }
+}
