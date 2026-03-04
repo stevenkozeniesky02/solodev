@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Box, Text, useApp, useInput } from 'ink';
 import { AuthScreen } from './screens/AuthScreen.js';
+import { ProjectScreen } from './screens/ProjectScreen.js';
 
 export type Screen = 'auth' | 'projects' | 'dashboard' | 'run';
 
@@ -35,7 +36,10 @@ export const App = () => {
         <AuthScreen onComplete={() => setScreen('projects')} />
       )}
       {screen === 'projects' && (
-        <Text>Projects screen — coming in Task 9</Text>
+        <ProjectScreen onSelect={(id, path) => {
+          setAppState({ projectId: id, projectPath: path });
+          setScreen('dashboard');
+        }} />
       )}
       {screen === 'dashboard' && (
         <Text>Dashboard screen — coming in Task 10</Text>
