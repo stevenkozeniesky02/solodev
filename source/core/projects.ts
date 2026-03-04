@@ -9,6 +9,7 @@ export interface Project {
   name: string;
   path: string;
   sessionId: string;
+  sessionStarted: boolean;
   permissionMode: 'default' | 'acceptEdits' | 'bypassPermissions';
   createdAt: string;
   lastOpenedAt: string;
@@ -58,6 +59,7 @@ export function addProject(name: string, projectPath: string): Project {
     name,
     path: projectPath,
     sessionId: uuidv4(),
+    sessionStarted: false,
     permissionMode: 'default',
     createdAt: now,
     lastOpenedAt: now,
@@ -78,6 +80,15 @@ export function touchProject(id: string): void {
   const project = store.projects.find(p => p.id === id);
   if (project) {
     project.lastOpenedAt = new Date().toISOString();
+    saveStore(store);
+  }
+}
+
+export function markSessionStarted(id: string): void {
+  const store = loadStore();
+  const project = store.projects.find(p => p.id === id);
+  if (project) {
+    project.sessionStarted = true;
     saveStore(store);
   }
 }

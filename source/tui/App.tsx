@@ -22,6 +22,7 @@ export const App = () => {
     projectPath: null,
   });
   const [runStep, setRunStep] = useState<PipelineStep | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Global quit handler
   useInput((input, key) => {
@@ -47,6 +48,7 @@ export const App = () => {
       )}
       {screen === 'dashboard' && appState.projectId && appState.projectPath && (
         <DashboardScreen
+          key={refreshKey}
           projectId={appState.projectId}
           projectPath={appState.projectPath}
           onRun={(step) => {
@@ -62,6 +64,7 @@ export const App = () => {
           step={runStep}
           onComplete={() => {
             setRunStep(null);
+            setRefreshKey(k => k + 1);
             setScreen('dashboard');
           }}
           onCancel={() => {

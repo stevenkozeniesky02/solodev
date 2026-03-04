@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Text, useInput } from 'ink';
 import Spinner from 'ink-spinner';
 import { runClaude, type ClaudeRunOptions } from '../../core/claude.js';
-import { getProject, touchProject } from '../../core/projects.js';
+import { getProject, touchProject, markSessionStarted } from '../../core/projects.js';
 import { getPluginDir } from '../../core/plugins.js';
 import { LiveStream } from '../components/LiveStream.js';
 import type { PipelineStep } from '../../core/pipeline.js';
@@ -34,7 +34,7 @@ export const RunScreen = ({ projectId, step, onComplete, onCancel }: Props) => {
     }
 
     const pluginDir = getPluginDir();
-    const isNew = !project.sessionId;
+    const isNew = !project.sessionStarted;
 
     const options: ClaudeRunOptions = {
       prompt: step.command,
@@ -57,6 +57,9 @@ export const RunScreen = ({ projectId, step, onComplete, onCancel }: Props) => {
       setExitCode(code);
       setPhase(code === 0 ? 'complete' : 'error');
       touchProject(projectId);
+      if (code === 0) {
+        markSessionStarted(projectId);
+      }
     });
 
     return () => {

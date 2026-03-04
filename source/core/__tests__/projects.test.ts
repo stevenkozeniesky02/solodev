@@ -30,6 +30,7 @@ describe('projects', () => {
     expect(project.name).toBe('test-app');
     expect(project.path).toBe('/tmp/test-app');
     expect(project.sessionId).toBeTruthy();
+    expect(project.sessionStarted).toBe(false);
     expect(project.permissionMode).toBe('default');
     const all = listProjects();
     expect(all).toHaveLength(1);

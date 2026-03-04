@@ -1,5 +1,5 @@
 // source/commands/run.ts
-import { getProjectByPath, addProject, touchProject } from '../core/projects.js';
+import { getProjectByPath, addProject, touchProject, markSessionStarted } from '../core/projects.js';
 import { getPluginDir } from '../core/plugins.js';
 import { runClaude } from '../core/claude.js';
 
@@ -16,7 +16,7 @@ export async function runDirect(command: string, args: string[], projectPath: st
   const { events, kill } = runClaude({
     prompt,
     sessionId: project.sessionId,
-    isNewSession: false,
+    isNewSession: !project.sessionStarted,
     pluginDir,
     permissionMode: project.permissionMode,
   });
@@ -30,8 +30,12 @@ export async function runDirect(command: string, args: string[], projectPath: st
 
     events.on('done', (code: number) => {
       touchProject(project!.id);
-      if (code === 0) resolve();
-      else reject(new Error(`Claude exited with code ${code}`));
+      if (code === 0) {
+        markSessionStarted(project!.id);
+        resolve();
+      } else {
+        reject(new Error(`Claude exited with code ${code}`));
+      }
     });
 
     process.on('SIGINT', () => {
