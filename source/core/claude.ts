@@ -20,7 +20,7 @@ export interface ClaudeStreamEvent {
   type: string;
   subtype?: string;
   message?: {
-    content?: Array<{ type: string; text?: string }>;
+    content?: Array<{ type: string; text?: string; name?: string }>;
   };
   content?: string;
   result?: string;
@@ -70,17 +70,28 @@ export async function checkAuth(): Promise<AuthStatus> {
 
 /** Extract displayable text from a stream-json event. */
 function extractContent(event: ClaudeStreamEvent): string | null {
-  // Assistant messages: { type: "assistant", message: { content: [{ type: "text", text: "..." }] } }
+  // Assistant messages with text content
   if (event.type === 'assistant' && event.message?.content) {
     const texts = event.message.content
       .filter(c => c.type === 'text' && c.text)
       .map(c => c.text!);
-    return texts.length > 0 ? texts.join('') : null;
+    if (texts.length > 0) return texts.join('');
+
+    // Tool use — show which tool is being called
+    const tools = event.message.content
+      .filter(c => c.type === 'tool_use' && c.name)
+      .map(c => c.name!);
+    if (tools.length > 0) return `> Using ${tools.join(', ')}`;
   }
 
-  // Result messages: { type: "result", result: "..." }
+  // Result messages
   if (event.type === 'result' && event.result) {
     return event.result;
+  }
+
+  // System init
+  if (event.type === 'system' && event.subtype === 'init') {
+    return '> Session initialized';
   }
 
   return null;
