@@ -1,6 +1,7 @@
 // source/tui/App.tsx
 import React, { useState } from 'react';
 import { Box, Text, useApp, useInput } from 'ink';
+import { AuthScreen } from './screens/AuthScreen.js';
 
 export type Screen = 'auth' | 'projects' | 'dashboard' | 'run';
 
@@ -31,7 +32,7 @@ export const App = () => {
   return (
     <Box flexDirection="column" height={process.stdout.rows}>
       {screen === 'auth' && (
-        <Text>Auth screen — coming in Task 8</Text>
+        <AuthScreen onComplete={() => setScreen('projects')} />
       )}
       {screen === 'projects' && (
         <Text>Projects screen — coming in Task 9</Text>
